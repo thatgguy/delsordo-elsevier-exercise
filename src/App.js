@@ -12,16 +12,22 @@ class App extends Component {
             type: 'conditionName',
             direction: 'down',
         },
+        isPatientInfoLoading: true,
+        isPatientConditionInfoLoading: true,
     }
 
     componentDidMount() {
-        const app = this;
-
-        const getPatientInfoSucceeded = (response) => app.setState({ patientInfo: response.entry[0].resource });
+        const getPatientInfoSucceeded = (response) => this.setState({
+            patientInfo: response.entry[0].resource,
+            isPatientInfoLoading: false,
+        });
         const getPatientInfoFailed = (error) => console.warn('Error getting patient information: ', error);
         getPatientInformation(getPatientInfoSucceeded, getPatientInfoFailed);
 
-        const getPatientConditionsSucceeded = (response) => app.setState({ patientConditions: response.entry.map(item => item.resource) });
+        const getPatientConditionsSucceeded = (response) => this.setState({
+            patientConditions: response.entry.map(item => item.resource),
+            isPatientConditionInfoLoading: false,
+        });
         const getPatientConditionsFailed = (error) => console.warn('Error getting patient conditions: ', error);
         getPatientConditions(getPatientConditionsSucceeded, getPatientConditionsFailed);
     }
@@ -50,11 +56,13 @@ class App extends Component {
         })
 
         const sortFunc = (a, b) => {
-            if (a[type] < b[type] || (!!a[type] && !b[type])) {
+            const firstEntry = (a[type] && typeof a[type] === 'string') ? a[type].toLowerCase() : a[type];
+            const secondEntry = (b[type] && typeof b[type] === 'string') ? b[type].toLowerCase() : b[type];
+            if (firstEntry < secondEntry || (!!firstEntry && !secondEntry)) {
                 return -1;
             }
     
-            if (a[type] > b[type]) {
+            if (firstEntry > secondEntry) {
                 return 1;
             }
     
@@ -67,16 +75,20 @@ class App extends Component {
     }
 
     render() {
-        const { patientInfo } = this.state;
-        const app = this;
+        const { patientInfo, isPatientConditionInfoLoading, isPatientInfoLoading } = this.state;
 
         return (
         <div className="app">
-            <PatientDetails patientInfo={patientInfo} className='app__patient-details'/>
-            <PatientConditions
-                conditions={this.getFormattedConditions()}
-                onSort={(newSort) => this.setState({ activeSort: newSort })}
-            />
+            {(isPatientConditionInfoLoading || isPatientInfoLoading)
+                ? <div>Loading...</div>
+                : <React.Fragment>
+                    <PatientDetails patientInfo={patientInfo} className='app__patient-details'/>
+                    <PatientConditions
+                        conditions={this.getFormattedConditions()}
+                        onSort={(newSort) => this.setState({ activeSort: newSort })}
+                    />
+                </React.Fragment>
+            }
         </div>
         );
     }
