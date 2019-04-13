@@ -8,6 +8,10 @@ class App extends Component {
     state = {
         patientInfo: {},
         patientConditions: [],
+        activeSort: {
+            type: 'conditionName',
+            direction: 'down',
+        },
     }
 
     componentDidMount() {
@@ -22,9 +26,9 @@ class App extends Component {
         getPatientConditions(getPatientConditionsSucceeded, getPatientConditionsFailed);
     }
 
-    // removes duplicate conditions and only returns necessary information
+    // removes duplicate conditions and only returns necessary information, then sorts
     getFormattedConditions () {
-        const { patientConditions } = this.state;
+        const { patientConditions, activeSort: { type, direction } } = this.state;
 
         const uniqueConditions = new Set(patientConditions.map(condition => condition.code.text))
         const filteredConditions = [...uniqueConditions].map(uniqueCondition => {
@@ -44,15 +48,35 @@ class App extends Component {
     
             return { conditionName: uniqueCondition, firstDateRecorded: earliestDate }
         })
-        return filteredConditions;
+
+        const sortFunc = (a, b) => {
+            if (a[type] < b[type] || (!!a[type] && !b[type])) {
+                return -1;
+            }
+    
+            if (a[type] > b[type]) {
+                return 1;
+            }
+    
+            return 0
+        }
+
+        const sortedConditions = filteredConditions.sort(sortFunc);
+        
+        return direction === 'down' ? sortedConditions : sortedConditions.reverse();
     }
 
     render() {
-        const { patientInfo, patientConditions } = this.state;
+        const { patientInfo } = this.state;
+        const app = this;
+
         return (
         <div className="app">
             <PatientDetails patientInfo={patientInfo} className='app__patient-details'/>
-            <PatientConditions conditions={this.getFormattedConditions()} />
+            <PatientConditions
+                conditions={this.getFormattedConditions()}
+                onSort={(newSort) => this.setState({ activeSort: newSort })}
+            />
         </div>
         );
     }
