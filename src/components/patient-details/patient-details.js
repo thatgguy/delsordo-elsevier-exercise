@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import './patient-details.scss';
 
 export default function PatientDetails ({ patientInfo, className }) {
     const { name, gender, birthDate } = patientInfo;
@@ -8,16 +9,16 @@ export default function PatientDetails ({ patientInfo, className }) {
     return (
         <div className={`patient-details ${className}`}>
             <div className='patient-details__name'>
-                <span>Name:</span>
-                <span>{plainTextName}</span>
+                <span className='patient-details__name-title'>Name:</span>
+                <span className='patient-details__name-details'>{plainTextName}</span>
             </div>
             <div className='patient-details__gender'>
-                <span>Gender:</span>
-                <span>{gender}</span>
+                <span className='patient-details__gender-title'>Gender:</span>
+                <span className='patient-details__gender-details'>{gender}</span>
             </div>
             <div className='patient-details__birthday'>
-                <span>Date of Birth:</span>
-                <span>{birthDate}</span>
+                <span className='patient-details__birthday-title'>Date of Birth:</span>
+                <span className='patient-detials__birthday-details'>{birthDate}</span>
             </div>
         </div>
     )

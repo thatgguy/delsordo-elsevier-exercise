@@ -23,14 +23,13 @@ export default function PatientConditions({ conditions, onSort }) {
                 </div>
                 {conditions.map(condition => {
                     const { conditionName, firstDateRecorded } = condition;
-                    console.log('type: ', typeof firstDateRecorded)
                     const urlFormattedConditionName = conditionName.replace(' ', '+');
                     const searchUrl = `https://www.ncbi.nlm.nih.gov/pubmed/?term=${urlFormattedConditionName}`
 
                     return (
                         <React.Fragment>
-                            <div className='patient-conditions__condition-name'>
-                                <a href={searchUrl}>{conditionName}</a>
+                            <div className='patient-conditions__condition-name' onClick={() => window.open(searchUrl, '_blank')}>
+                                {conditionName}
                             </div>
                             <div className='patient-conditions__condition-date-recorded'>{firstDateRecorded ? firstDateRecorded.toString() : 'N/A'}</div>
                         </React.Fragment>                    

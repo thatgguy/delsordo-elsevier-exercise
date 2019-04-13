@@ -1,0 +1,21 @@
+.patient-details {
+    display: flex;
+    justify-content: center;
+
+    &__name,
+    &__gender {
+        padding-right: 20px
+    }
+
+    &__name-title,
+    &__gender-title,
+    &__birthday-title {
+        font-weight: 600;
+        padding-right: 5px;
+    }
+
+    &__name-details,
+    &__gender-details {
+        text-transform: uppercase;
+    }
+}

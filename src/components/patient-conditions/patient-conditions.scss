@@ -30,7 +30,12 @@
         border-top: 1px solid black;
     }
 
-    &__sort-buttons-container {
+    &__condition-name {
+        cursor: pointer;
+
+        &:hover {
+            background-color: #8ddbff;
+        }
     }
 
     &__sort-up,
