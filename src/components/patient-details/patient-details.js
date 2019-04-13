@@ -1,11 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-export default function PatientDetails ({ patientInfo }) {
+export default function PatientDetails ({ patientInfo, className }) {
     const { name, gender, birthDate } = patientInfo;
     const plainTextName = name ? name[0].text : '';
 
     return (
-        <div className='patient-details'>
+        <div className={`patient-details ${className}`}>
             <div className='patient-details__name'>
                 <span>Name:</span>
                 <span>{plainTextName}</span>
@@ -20,4 +21,14 @@ export default function PatientDetails ({ patientInfo }) {
             </div>
         </div>
     )
+}
+
+PatientDetails.propTypes = {
+    PatientDetails: PropTypes.shape({
+        name: PropTypes.arrayOf(PropTypes.shape({
+            text: PropTypes.string,
+        })),
+        gender: PropTypes.string,
+        birthDate: PropTypes.string,
+    })
 }
